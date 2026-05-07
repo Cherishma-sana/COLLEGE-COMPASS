@@ -41,7 +41,27 @@ Run the backend and frontend in separate terminals, then open:
 - `backend/` - API server and routes.
 - `college-compass/` - Next.js frontend pages, components, and styles.
 
+## Database
+
+The backend uses PostgreSQL and reads the connection string from `backend/.env` via `DATABASE_URL`.
+
+The `colleges` table should include fields such as:
+
+- `id`
+- `name`
+- `state`
+- `location`
+- `courses` (array)
+- `rating`
+
+Example connection string format:
+
+```env
+DATABASE_URL="postgresql://user:password@host:port/database?sslmode=require"
+```
+
 ## Notes
 
 - The frontend uses the backend API at `http://localhost:5000/api`.
 - Make sure both folders are running at the same time to use the full app.
+- Do not commit real database credentials to Git.
