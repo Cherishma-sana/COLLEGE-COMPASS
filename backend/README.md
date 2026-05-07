@@ -1,29 +1,36 @@
 # Backend - College Compass
 
-This folder contains the Node.js backend service for the College Compass application.
+This folder contains the Node.js backend API for the College Compass application.
 
-## Setup
+## Requirements
 
-1. Open a terminal in `backend/`
-2. Install dependencies:
+- Node.js
+- npm
+
+## Run locally
+
+Open a terminal in `backend/` and run:
 
 ```bash
 npm install
-```
-
-3. Start the backend server:
-
-```bash
 npm run dev
 ```
 
-## Structure
+The backend server listens on `http://localhost:5000` by default.
 
-- `src/` - Backend source files
-- `package.json` - Project metadata and scripts
+## API
+
+- `GET /` - Health check returns "Backend Running"
+- `GET /api/colleges` - College list route
+
+## Project structure
+
+- `src/index.ts` - Server entrypoint
+- `src/routes/colleges.ts` - Express routes for college data
+- `package.json` - Dependencies and scripts
 - `tsconfig.json` - TypeScript configuration
 
 ## Notes
 
-- The backend and frontend are separate parts of the same repository.
-- Run the backend and frontend in separate terminal sessions.
+- The frontend app uses this API at `http://localhost:5000/api`.
+- Run the backend and frontend in separate terminals.

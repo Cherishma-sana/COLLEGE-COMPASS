@@ -1,50 +1,47 @@
 # College Compass
 
-This repository contains two main parts:
+This repository contains the full College Compass project with two separate folders:
 
-- `backend/` - A Node.js backend service for College Compass.
-- `college-compass/` - A Next.js frontend application for College Compass.
+- `backend/` - Node.js + Express API built with TypeScript.
+- `college-compass/` - Next.js frontend application.
 
-## Getting Started
+## Run the application
 
-### Backend
+### 1. Backend
 
-1. Open a terminal in `backend/`
-2. Install dependencies:
-
-```bash
-npm install
-```
-
-3. Start the backend server:
-
-```bash
-npm run dev
-```
-
-### Frontend
-
-1. Open a terminal in `college-compass/`
-2. Install dependencies:
+Open a terminal in `backend/` and run:
 
 ```bash
 npm install
-```
-
-3. Start the Next.js app:
-
-```bash
 npm run dev
 ```
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser.
+The backend starts on `http://localhost:5000` by default.
 
-## Repository Structure
+### 2. Frontend
 
-- `backend/` - API routes and backend logic.
-- `college-compass/` - Next.js application files.
+Open a terminal in `college-compass/` and run:
+
+```bash
+npm install
+npm run dev
+```
+
+The frontend starts on `http://localhost:3000`.
+
+### 3. Use both together
+
+Run the backend and frontend in separate terminals, then open:
+
+- Frontend: `http://localhost:3000`
+- Backend health: `http://localhost:5000`
+
+## Folder structure
+
+- `backend/` - API server and routes.
+- `college-compass/` - Next.js frontend pages, components, and styles.
 
 ## Notes
 
-- Make sure you run the backend and frontend separately in their own terminal sessions.
-- The frontend and backend folders are tracked under the same Git repository.
+- The frontend uses the backend API at `http://localhost:5000/api`.
+- Make sure both folders are running at the same time to use the full app.
