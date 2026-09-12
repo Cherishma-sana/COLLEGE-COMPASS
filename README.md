@@ -1,67 +1,189 @@
-# College Compass
+# 🎓 College Compass
 
-This repository contains the full College Compass project with two separate folders:
+College Compass is a full-stack college discovery platform that helps students **search, explore, compare, and save colleges** in one place.
 
-- `backend/` - Node.js + Express API built with TypeScript.
-- `college-compass/` - Next.js frontend application.
+The application provides college listings with search and filters, detailed college information, college comparison, and user authentication with saved colleges.
 
-## Run the application
+---
 
-### 1. Backend
+## 🚀 Features
 
-Open a terminal in `backend/` and run:
+### 1. College Listing & Search
 
-```bash
-npm install
-npm run dev
-```
+Students can browse colleges and find relevant institutions using:
 
-The backend starts on `http://localhost:5000` by default.
+- College name search
+- Location search
+- State filtering
+- Course filtering
+- Pagination
+- College rating-based sorting
+- College details navigation
 
-### 2. Frontend
+The college listing API supports pagination and filtering so that large datasets can be handled efficiently.
 
-Open a terminal in `college-compass/` and run:
+---
 
-```bash
-npm install
-npm run dev
-```
+### 2. College Detail Page
 
-The frontend starts on `http://localhost:3000`.
+Each college has a dedicated detail page containing:
 
-### 3. Use both together
+- College name
+- Location
+- State
+- Courses
+- Fees
+- Rating
+- Placement percentage
+- Description
 
-Run the backend and frontend in separate terminals, then open:
+Students can also save a college from the detail page when logged in.
 
-- Frontend: `http://localhost:3000`
-- Backend health: `http://localhost:5000`
+---
 
-## Folder structure
+### 3. Compare Colleges
 
-- `backend/` - API server and routes.
-- `college-compass/` - Next.js frontend pages, components, and styles.
+Students can select up to **3 colleges** and compare them side by side.
 
-## Database
+Comparison includes:
 
-The backend uses PostgreSQL and reads the connection string from `backend/.env` via `DATABASE_URL`.
+- Location
+- Fees
+- Rating
+- Placement percentage
+- Courses
 
-The `colleges` table should include fields such as:
+This makes it easier for students to evaluate multiple colleges before making a decision.
 
-- `id`
-- `name`
-- `state`
-- `location`
-- `courses` (array)
-- `rating`
+---
 
-Example connection string format:
+### 4. Authentication
 
-```env
-DATABASE_URL="postgresql://user:password@host:port/database?sslmode=require"
-```
+College Compass provides user authentication using:
 
-## Notes
+- User registration
+- User login
+- Password hashing with bcrypt
+- JWT-based authentication
+- Logout
+- Protected saved-college APIs
 
-- The frontend uses the backend API at `http://localhost:5000/api`.
-- Make sure both folders are running at the same time to use the full app.
-- Do not commit real database credentials to Git.
+Passwords are never stored as plain text.
+
+---
+
+### 5. Saved Colleges
+
+Logged-in users can:
+
+- Save colleges
+- View saved colleges
+- Remove saved colleges
+
+Saved colleges are associated with the authenticated user in PostgreSQL.
+
+---
+
+## 🏗️ Tech Stack
+
+### Frontend
+
+- Next.js
+- React
+- TypeScript
+- Tailwind CSS
+- Axios
+
+### Backend
+
+- Next.js API Route Handlers
+- TypeScript
+- Node.js
+
+### Database
+
+- PostgreSQL
+- Prisma ORM
+
+### Authentication
+
+- JWT
+- bcryptjs
+
+### Deployment
+
+- Vercel
+- PostgreSQL/Neon
+
+---
+
+## 📁 Project Structure
+
+```text
+COLLEGE-COMPASS/
+│
+├── college-compass/
+│   │
+│   ├── app/
+│   │   ├── api/
+│   │   │   ├── auth/
+│   │   │   │   ├── login/
+│   │   │   │   │   └── route.ts
+│   │   │   │   └── register/
+│   │   │   │       └── route.ts
+│   │   │   │
+│   │   │   ├── colleges/
+│   │   │   │   ├── [id]/
+│   │   │   │   │   └── route.ts
+│   │   │   │   └── route.ts
+│   │   │   │
+│   │   │   └── saved-colleges/
+│   │   │       ├── [collegeId]/
+│   │   │       │   └── route.ts
+│   │   │       └── route.ts
+│   │   │
+│   │   ├── college/
+│   │   │   └── [id]/
+│   │   │       └── page.tsx
+│   │   │
+│   │   ├── colleges/
+│   │   │   └── page.tsx
+│   │   │
+│   │   ├── compare/
+│   │   │   └── page.tsx
+│   │   │
+│   │   ├── login/
+│   │   │   └── page.tsx
+│   │   │
+│   │   ├── register/
+│   │   │   └── page.tsx
+│   │   │
+│   │   ├── saved-colleges/
+│   │   │   └── page.tsx
+│   │   │
+│   │   ├── layout.tsx
+│   │   └── page.tsx
+│   │
+│   ├── components/
+│   │   └── Navbar.tsx
+│   │
+│   ├── lib/
+│   │   ├── api.ts
+│   │   └── prisma.ts
+│   │
+│   ├── prisma/
+│   │   ├── migrations/
+│   │   └── schema.prisma
+│   │
+│   ├── generated/
+│   │   └── prisma/
+│   │
+│   ├── public/
+│   │
+│   ├── package.json
+│   ├── tsconfig.json
+│   ├── next.config.ts
+│   ├── prisma.config.ts
+│   └── .env.local
+│
+└── README.md

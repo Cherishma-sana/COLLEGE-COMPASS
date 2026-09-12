@@ -1,114 +1,197 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 import axios from "axios";
-
 type College = {
   id: number;
   name: string;
   location: string;
   state: string;
-  rating: number;
+  fees: number | null;
+  rating: number | string | null;
+  placement_percent: number | null;
+  courses: string[];
+  description: string | null;
 };
 
-export default function CollegesPage() {
-  const [colleges, setColleges] = useState<College[]>([]);
-  const [search, setSearch] = useState("");
-  const [state, setState] = useState("");
-  const [location, setLocation] = useState("");
+export default function CollegeDetailsPage() {
+  const params = useParams();
+  const id = params.id;
+
+  const [college, setCollege] = useState<College | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    fetchColleges();
-  }, [search, state, location]);
+    const fetchCollege = async () => {
+      try {
+        setLoading(true);
 
-  const fetchColleges = async () => {
-    const res = await axios.get("http://localhost:5000/api/colleges", {
-      params: { search, state, location },
-    });
-    setColleges(res.data);
-  };
+        const response = await axios.get(
+          `/api/colleges/${id}`
+        );
+
+        setCollege(response.data);
+      } catch (error) {
+        console.error(error);
+        setError("Unable to load college details.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      fetchCollege();
+    }
+  }, [id]);
+
+  if (loading) {
+    return (
+      <main className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <p className="text-xl text-gray-600">
+          Loading college details...
+        </p>
+      </main>
+    );
+  }
+
+  if (error || !college) {
+    return (
+      <main className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold text-red-600 mb-4">
+            College Not Found
+          </h1>
+
+          <a
+            href="/colleges"
+            className="bg-blue-700 text-white px-6 py-3 rounded-xl"
+          >
+            Back to Colleges
+          </a>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-100 p-8">
-      <div className="max-w-7xl mx-auto">
 
-        <div className="flex justify-between items-center mb-10">
-          <h1 className="text-5xl font-extrabold text-blue-700">
-            College Compass
+      <div className="max-w-5xl mx-auto">
+
+        {/* Header */}
+        <div className="bg-white rounded-3xl shadow-xl p-8 mb-8">
+
+          <a
+            href="/colleges"
+            className="inline-block mb-6 text-blue-700 font-semibold hover:underline"
+          >
+            ← Back to Colleges
+          </a>
+
+          <h1 className="text-4xl md:text-5xl font-extrabold text-blue-700 mb-4">
+            {college.name}
           </h1>
 
-          <div className="flex gap-4">
-            <a href="/" className="px-5 py-3 bg-blue-700 text-white rounded-xl">
-              Home
-            </a>
-            <a href="/about" className="px-5 py-3 bg-green-600 text-white rounded-xl">
-              About
-            </a>
+          <p className="text-lg text-gray-600">
+            📍 {college.location}, {college.state}
+          </p>
+
+        </div>
+
+        {/* Main Information */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+
+          {/* Fees */}
+          <div className="bg-white rounded-2xl shadow-lg p-6">
+            <p className="text-gray-500 mb-2">
+              Annual Fees
+            </p>
+
+            <h2 className="text-3xl font-bold text-blue-700">
+              {college.fees !== null
+                ? `₹${college.fees.toLocaleString()}`
+                : "Not Available"}
+            </h2>
           </div>
+
+          {/* Rating */}
+          <div className="bg-white rounded-2xl shadow-lg p-6">
+            <p className="text-gray-500 mb-2">
+              Rating
+            </p>
+
+            <h2 className="text-3xl font-bold text-yellow-600">
+              ⭐{" "}
+              {college.rating !== null
+                ? Number(college.rating).toFixed(1)
+                : "N/A"}
+            </h2>
+          </div>
+
+          {/* Placement */}
+          <div className="bg-white rounded-2xl shadow-lg p-6">
+            <p className="text-gray-500 mb-2">
+              Placement
+            </p>
+
+            <h2 className="text-3xl font-bold text-green-600">
+              {college.placement_percent !== null
+                ? `${college.placement_percent}%`
+                : "N/A"}
+            </h2>
+          </div>
+
         </div>
 
-        <div className="bg-white rounded-2xl shadow-xl p-6 mb-10 grid grid-cols-1 md:grid-cols-3 gap-4">
-          <input
-            className="border rounded-xl px-4 py-3"
-            placeholder="Search college..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+        {/* Courses */}
+        <div className="bg-white rounded-3xl shadow-xl p-8 mb-8">
 
-          <select
-            className="border rounded-xl px-4 py-3"
-            value={state}
-            onChange={(e) => setState(e.target.value)}
-          >
-            <option value="">All States</option>
-            <option value="Telangana">Telangana</option>
-            <option value="Andhra Pradesh">Andhra Pradesh</option>
-            <option value="Tamil Nadu">Tamil Nadu</option>
-            <option value="Karnataka">Karnataka</option>
-          </select>
+          <h2 className="text-3xl font-bold text-gray-800 mb-6">
+            Courses Offered
+          </h2>
 
-          <select
-            className="border rounded-xl px-4 py-3"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-          >
-            <option value="">All Locations</option>
-            <option value="Hyderabad">Hyderabad</option>
-            <option value="Chennai">Chennai</option>
-            <option value="Bangalore">Bangalore</option>
-            <option value="Vijayawada">Vijayawada</option>
-          </select>
+          <div className="flex flex-wrap gap-3">
+
+            {college.courses && college.courses.length > 0 ? (
+              college.courses.map((course) => (
+                <span
+                  key={course}
+                  className="bg-blue-100 text-blue-700 px-4 py-2 rounded-full font-semibold"
+                >
+                  {course}
+                </span>
+              ))
+            ) : (
+              <p className="text-gray-500">
+                Course information not available.
+              </p>
+            )}
+
+          </div>
+
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {colleges.map((college) => (
-            <div
-              key={college.id}
-              className="bg-white rounded-3xl shadow-lg p-7 hover:scale-105 transition"
-            >
-              <h2 className="text-3xl font-bold text-blue-700 mb-4">
-                {college.name}
-              </h2>
+        {/* Description */}
+        <div className="bg-white rounded-3xl shadow-xl p-8">
 
-              <p className="text-gray-700 mb-3">
-                📍 {college.location}, {college.state}
-              </p>
+          <h2 className="text-3xl font-bold text-gray-800 mb-6">
+            About College
+          </h2>
 
-              <p className="text-lg font-semibold mb-6">
-                ⭐ Rating: {college.rating}
-              </p>
+          <p className="text-gray-700 text-lg leading-8">
+            {college.description ||
+              "Detailed information about this college is currently unavailable."}
+          </p>
 
-              <a
-                href={`/college/${college.id}`}
-                className="inline-block bg-blue-700 text-white px-6 py-3 rounded-xl hover:bg-blue-800"
-              >
-                View Details
-              </a>
-            </div>
-          ))}
         </div>
 
       </div>
+
     </main>
   );
 }
